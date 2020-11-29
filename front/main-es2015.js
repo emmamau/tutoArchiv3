@@ -36,6 +36,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/raw-loader/dist/cjs.js!./src/app/connexion/connexion.component.html":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/raw-loader/dist/cjs.js!./src/app/connexion/connexion.component.html ***!
+  \******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("<div *ngIf=\"user$ | async as u\">\n    {{u.nom}}\n    {{u.prenom}}\n\n    <button (click)=\"Deconnexion()\">Deconnexion</button>\n\n</div>\n\n<div *ngIf=\"user$ == null\">\n\n    <form [formGroup]=\"userForm\" >\n    <label>\n        Login :\n        <input type=\"text\" formControlName=\"login\" id=\"login\" >\n    </label>\n\n    <label>\n        Password :\n        <input type=\"text\" formControlName=\"password\" id=\"password\" >\n    </label>\n\n    <button (click)=\"Connexion()\"[disabled]=\"!userForm.valid\">Connexion</button>\n\n    </form>\n    \n</div>\n\n\n");
+
+/***/ }),
+
 /***/ "./node_modules/tslib/tslib.es6.js":
 /*!*****************************************!*\
   !*** ./node_modules/tslib/tslib.es6.js ***!
@@ -290,6 +303,122 @@ function __classPrivateFieldSet(receiver, privateMap, value) {
 
 /***/ }),
 
+/***/ "./src/app/api-http-interceptor.ts":
+/*!*****************************************!*\
+  !*** ./src/app/api-http-interceptor.ts ***!
+  \*****************************************/
+/*! exports provided: ApiHttpInterceptor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ApiHttpInterceptor", function() { return ApiHttpInterceptor; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+
+
+
+
+
+
+const API_DOMAIN = "";
+let ApiHttpInterceptor = class ApiHttpInterceptor {
+    constructor(router) {
+        this.router = router;
+        this.OAUTH_TOKEN = "";
+    }
+    intercept(req, next) {
+        const clone = req.clone({ setHeaders: { Authorization: `Bearer ${this.OAUTH_TOKEN}` } });
+        return next.handle(clone).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])((evt) => {
+            if (evt instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpResponse"]) {
+                let tab;
+                let enteteAuthorization = evt.headers.get("Authorization");
+                if (enteteAuthorization != null) {
+                    tab = enteteAuthorization.split(/Bearer\s+(.*)$/i);
+                    if (tab.length > 1) {
+                        this.OAUTH_TOKEN = tab[1];
+                    }
+                    console.log("Bearer : " + this.OAUTH_TOKEN);
+                }
+            }
+        }, (error) => {
+            switch (error.status) {
+                case 401:
+                    this.OAUTH_TOKEN = "";
+                    console.log(`Erreur 401`);
+                    this.router.navigate(['/connexion']);
+                    break;
+            }
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(null);
+        }));
+    }
+};
+ApiHttpInterceptor.ctorParameters = () => [
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"] }
+];
+ApiHttpInterceptor = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])()
+], ApiHttpInterceptor);
+
+
+
+/***/ }),
+
+/***/ "./src/app/api.service.ts":
+/*!********************************!*\
+  !*** ./src/app/api.service.ts ***!
+  \********************************/
+/*! exports provided: ApiService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ApiService", function() { return ApiService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+
+
+
+let ApiService = class ApiService {
+    constructor(httpClient) {
+        this.httpClient = httpClient;
+        this.urlApiLogin = "/api/login";
+        this.urlApiAuth = "/api/auth/";
+        this.tokenParse = "";
+    }
+    postLogin(login, password) {
+        let data;
+        let httpOptions = {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'application/x-www-form-urlencoded' })
+        };
+        data = "login=" + login + "&pass=" + password;
+        return this.httpClient.post(this.urlApiLogin, data, httpOptions);
+    }
+    getLogin(login) {
+        let data;
+        data = "login=" + login;
+        console.log(data);
+        return this.httpClient.get(this.urlApiAuth + login);
+    }
+};
+ApiService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+ApiService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], ApiService);
+
+
+
+/***/ }),
+
 /***/ "./src/app/app.component.css":
 /*!***********************************!*\
   !*** ./src/app/app.component.css ***!
@@ -319,7 +448,7 @@ __webpack_require__.r(__webpack_exports__);
 
 let AppComponent = class AppComponent {
     constructor() {
-        this.title = 'client';
+        this.title = 'user';
     }
 };
 AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -346,26 +475,119 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppModule", function() { return AppModule; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm2015/platform-browser.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./connexion/connexion.component */ "./src/app/connexion/connexion.component.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm2015/forms.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var _api_http_interceptor__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./api-http-interceptor */ "./src/app/api-http-interceptor.ts");
 
 
 
 
+
+
+
+
+
+const routes = [
+    { path: 'connexion', component: _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"] }
+];
+_angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"];
 let AppModule = class AppModule {
 };
 AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["NgModule"])({
         declarations: [
-            _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]
+            _app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"],
+            _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"]
         ],
         imports: [
-            _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"]
+            _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HttpClientModule"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(routes)
         ],
-        providers: [],
-        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
+        providers: [
+            {
+                provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HTTP_INTERCEPTORS"], useClass: _api_http_interceptor__WEBPACK_IMPORTED_MODULE_8__["ApiHttpInterceptor"], multi: true
+            }
+        ],
+        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]]
     })
 ], AppModule);
+
+
+
+/***/ }),
+
+/***/ "./src/app/connexion/connexion.component.css":
+/*!***************************************************!*\
+  !*** ./src/app/connexion/connexion.component.css ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2Nvbm5leGlvbi9jb25uZXhpb24uY29tcG9uZW50LmNzcyJ9 */");
+
+/***/ }),
+
+/***/ "./src/app/connexion/connexion.component.ts":
+/*!**************************************************!*\
+  !*** ./src/app/connexion/connexion.component.ts ***!
+  \**************************************************/
+/*! exports provided: ConnexionComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConnexionComponent", function() { return ConnexionComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _api_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api.service */ "./src/app/api.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm2015/forms.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+
+
+
+
+
+
+let ConnexionComponent = class ConnexionComponent {
+    constructor(fb, api, router) {
+        this.fb = fb;
+        this.api = api;
+        this.router = router;
+    }
+    ngOnInit() {
+        this.userForm = this.fb.group({
+            login: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required],
+            password: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]
+        });
+    }
+    Connexion() {
+        this.api.postLogin(this.userForm.value.login, this.userForm.value.password).subscribe(j => { console.log(j); this.user$ = this.api.getLogin(this.userForm.value.login); }, this.user$ = null);
+    }
+    Deconnexion() {
+        this.user$ = null;
+        this.router.navigate(['/connexion']);
+    }
+};
+ConnexionComponent.ctorParameters = () => [
+    { type: _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"] },
+    { type: _api_service__WEBPACK_IMPORTED_MODULE_2__["ApiService"] },
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"] }
+];
+ConnexionComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-connexion',
+        template: tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! raw-loader!./connexion.component.html */ "./node_modules/raw-loader/dist/cjs.js!./src/app/connexion/connexion.component.html")).default,
+        styles: [tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(/*! ./connexion.component.css */ "./src/app/connexion/connexion.component.css")).default]
+    })
+], ConnexionComponent);
 
 
 
@@ -436,7 +658,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/emma/tutoArchiV3/client/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/emma/tutoArchiV3/user/src/main.ts */"./src/main.ts");
 
 
 /***/ })
