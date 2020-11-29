@@ -2,10 +2,13 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
+
+
 use Tuupola\Middleware\HttpBasicAuthentication;
 use \Firebase\JWT\JWT;
 
 require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/bootstrap.php';
 
 $app = AppFactory::create();
 
@@ -20,11 +23,19 @@ const JWT_SECRET = "MET02-CNAM";
 
 // API Nécessitant un Jwt valide
 $app->get('/api/auth/{login}', function (Request $request, Response $response, $args) {
+    global $entityManager;
+
     $login = $args['login'];
 
     $response = addHeaders ($response);
 
-    $data = array('nom' => "MOMO", 'prenom' => "Emma");
+    $utilisateurRepository = $entityManager->getRepository('Utilisateur');
+    $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login));
+    if ($utilisateur) {
+        $data = array('nom' => $utilisateur->getNom(), 'prenom' => $utilisateur->getPrenom());
+    } else {
+        $response = $response->withStatus(401);
+    }
     $response->getBody()->write(json_encode($data));
 
     return $response;
@@ -33,6 +44,7 @@ $app->get('/api/auth/{login}', function (Request $request, Response $response, $
 
 // APi d'authentification générant un JWT
 $app->post('/api/login', function (Request $request, Response $response, $args) {   
+    global $entityManager;
     $err=false;
     $body = $request->getParsedBody();
     $login = $body ['login'] ?? "";
@@ -44,24 +56,30 @@ $app->post('/api/login', function (Request $request, Response $response, $args) 
     if (!preg_match("/[a-zA-Z0-9]{1,20}/",$pass))  {
         $err=true;
     }
-
+    //$pass = hash('sha256',$pass);
     $response = addHeaders ($response);
     
     if (!$err) {
-        $userid = "emma";
-        $email = "emma@emma.fr";
-        $issuedAt = time();
-        $expirationTime = $issuedAt + 60; // jwt valid for 60 seconds from the issued time
-        $payload = array(
-            'userid' => $userid,
-            'iat' => $issuedAt,
-            'exp' => $expirationTime
-        );
-        $token_jwt = JWT::encode($payload,JWT_SECRET, "HS256");
-        $response = $response->withHeader("Authorization", "Bearer {$token_jwt}")->withHeader("Content-Type", "application/json");
+        $utilisateurRepository = $entityManager->getRepository('Utilisateur');
+        $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login, 'password' => $pass));
+        if ($utilisateur and $login == $utilisateur->getLogin() and $pass == $utilisateur->getPassword()) {
+            $userid = "emma";
+            $email = "emma@emma.fr";
+            $issuedAt = time();
+            $expirationTime = $issuedAt + 60; // jwt valid for 60 seconds from the issued time
+            $payload = array(
+                'userid' => $userid,
+                'iat' => $issuedAt,
+                'exp' => $expirationTime
+            );
+            $token_jwt = JWT::encode($payload,JWT_SECRET, "HS256");
+            $response = $response->withHeader("Authorization", "Bearer {$token_jwt}")->withHeader("Content-Type", "application/json");
 
-        $data = array('nom' => "MOMO", 'prenom' => "Emma");
-        $response->getBody()->write(json_encode($data));
+            $data = array('nom' => $utilisateur->getNom(), 'prenom' => $utilisateur->getPrenom());
+            $response->getBody()->write(json_encode($data));
+        } else {          
+            $response = $response->withStatus(401);
+        }
     } else {
         $response = $response->withStatus(401);
     }
