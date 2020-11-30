@@ -8,8 +8,8 @@ $config = Setup::createYAMLMetadataConfiguration(array(__DIR__ . "/config/yaml")
 $conn = array(
 'host' => 'ec2-3-248-4-172.eu-west-1.compute.amazonaws.com',
 'driver' => 'pdo_pgsql',
-'user' => 'hfefuxqtvetjfq',
-'password' => 'b5f5ee98a768f21d17433e289edaadfc70ed1e2934d910554cea2cb1ea928b47',
+'user' => 'xqcmspzrocvvtt',
+'password' => 'a6479131a452d0da96fe9ae196d0993d3e9ac92e79d663702f46271d5ebff331',
 'dbname' => 'd8jrr50unmfhsl',
 'port' => '5432'
 );
