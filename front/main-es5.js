@@ -734,28 +734,61 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
     /*! @angular/router */
     "./node_modules/@angular/router/fesm2015/router.js");
+    /* harmony import */
 
-    var API_DOMAIN = "";
+
+    var _ngxs_store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! @ngxs/store */
+    "./node_modules/@ngxs/store/fesm2015/ngxs-store.js");
+    /* harmony import */
+
+
+    var _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    /*! ../shared/actions/jwt-action */
+    "./src/shared/actions/jwt-action.ts");
+    /* harmony import */
+
+
+    var src_shared_states_jwt_state__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+    /*! src/shared/states/jwt-state */
+    "./src/shared/states/jwt-state.ts");
+
+    var API_DOMAIN = ""; // testgit
 
     var ApiHttpInterceptor = /*#__PURE__*/function () {
-      function ApiHttpInterceptor(router) {
+      function ApiHttpInterceptor(router, store, actions$) {
+        var _this = this;
+
         _classCallCheck(this, ApiHttpInterceptor);
 
         this.router = router;
-        this.OAUTH_TOKEN = "";
+        this.store = store;
+        this.actions$ = actions$;
+        this.jwtToken = "";
+        this.token$ = this.store.select(src_shared_states_jwt_state__WEBPACK_IMPORTED_MODULE_8__["JwtState"].getToken);
+        this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"])).subscribe(function (_ref) {
+          var payload = _ref.payload;
+          _this.jwtToken = payload.token;
+          console.log("jwtToken modifié : " + _this.jwtToken);
+        });
       }
 
       _createClass(ApiHttpInterceptor, [{
         key: "intercept",
         value: function intercept(req, next) {
-          var _this = this;
+          var _this2 = this;
 
-          var clone = req.clone({
-            setHeaders: {
-              Authorization: "Bearer ".concat(this.OAUTH_TOKEN)
-            }
-          });
-          return next.handle(clone).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (evt) {
+          if (this.jwtToken == "") {
+            req = req;
+          } else {
+            req = req.clone({
+              setHeaders: {
+                Authorization: "Bearer ".concat(this.jwtToken)
+              }
+            });
+          }
+
+          return next.handle(req).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (evt) {
             if (evt instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpResponse"]) {
               var tab;
               var enteteAuthorization = evt.headers.get("Authorization");
@@ -764,19 +797,26 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 tab = enteteAuthorization.split(/Bearer\s+(.*)$/i);
 
                 if (tab.length > 1) {
-                  _this.OAUTH_TOKEN = tab[1];
+                  _this2.jwtToken = tab[1];
+
+                  _this2.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]({
+                    "token": _this2.jwtToken
+                  }));
                 }
 
-                console.log("Bearer : " + _this.OAUTH_TOKEN);
+                console.log("Bearer : " + _this2.jwtToken);
               }
             }
           }, function (error) {
             switch (error.status) {
               case 401:
-                _this.OAUTH_TOKEN = "";
+                _this2.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]({
+                  "token": ""
+                }));
+
                 console.log("Erreur 401");
 
-                _this.router.navigate(['/connexion']);
+                _this2.router.navigate(['/connexion']);
 
                 break;
             }
@@ -792,6 +832,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     ApiHttpInterceptor.ctorParameters = function () {
       return [{
         type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]
+      }, {
+        type: _ngxs_store__WEBPACK_IMPORTED_MODULE_6__["Store"]
+      }, {
+        type: _ngxs_store__WEBPACK_IMPORTED_MODULE_6__["Actions"]
       }];
     };
 
@@ -1027,6 +1071,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var _api_http_interceptor__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
     /*! ./api-http-interceptor */
     "./src/app/api-http-interceptor.ts");
+    /* harmony import */
+
+
+    var _ngxs_store__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
+    /*! @ngxs/store */
+    "./node_modules/@ngxs/store/fesm2015/ngxs-store.js");
 
     var routes = [{
       path: 'connexion',
@@ -1040,7 +1090,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["NgModule"])({
       declarations: [_app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"], _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"]],
-      imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HttpClientModule"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(routes)],
+      imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HttpClientModule"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(routes), _ngxs_store__WEBPACK_IMPORTED_MODULE_9__["NgxsModule"].forRoot()],
       providers: [{
         provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HTTP_INTERCEPTORS"],
         useClass: _api_http_interceptor__WEBPACK_IMPORTED_MODULE_8__["ApiHttpInterceptor"],
@@ -1120,14 +1170,27 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! @angular/router */
     "./node_modules/@angular/router/fesm2015/router.js");
+    /* harmony import */
+
+
+    var _ngxs_store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    /*! @ngxs/store */
+    "./node_modules/@ngxs/store/fesm2015/ngxs-store.js");
+    /* harmony import */
+
+
+    var _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! ../../shared/actions/jwt-action */
+    "./src/shared/actions/jwt-action.ts");
 
     var ConnexionComponent = /*#__PURE__*/function () {
-      function ConnexionComponent(fb, api, router) {
+      function ConnexionComponent(fb, api, router, store) {
         _classCallCheck(this, ConnexionComponent);
 
         this.fb = fb;
         this.api = api;
         this.router = router;
+        this.store = store;
       }
 
       _createClass(ConnexionComponent, [{
@@ -1141,17 +1204,20 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       }, {
         key: "Connexion",
         value: function Connexion() {
-          var _this2 = this;
+          var _this3 = this;
 
           this.api.postLogin(this.userForm.value.login, this.userForm.value.password).subscribe(function (j) {
             console.log(j);
-            _this2.user$ = _this2.api.getLogin(_this2.userForm.value.login);
+            _this3.user$ = _this3.api.getLogin(_this3.userForm.value.login);
           }, this.user$ = null);
         }
       }, {
         key: "Deconnexion",
         value: function Deconnexion() {
           this.user$ = null;
+          this.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_6__["CreateJwt"]({
+            "token": ""
+          }));
           this.router.navigate(['/connexion']);
         }
       }]);
@@ -1166,6 +1232,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         type: _api_service__WEBPACK_IMPORTED_MODULE_2__["ApiService"]
       }, {
         type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]
+      }, {
+        type: _ngxs_store__WEBPACK_IMPORTED_MODULE_5__["Store"]
       }];
     };
 
@@ -1276,6 +1344,119 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__["platformBrowserDynamic"])().bootstrapModule(_app_app_module__WEBPACK_IMPORTED_MODULE_3__["AppModule"])["catch"](function (err) {
       return console.error(err);
     });
+    /***/
+  },
+
+  /***/
+  "./src/shared/actions/jwt-action.ts":
+  /*!******************************************!*\
+    !*** ./src/shared/actions/jwt-action.ts ***!
+    \******************************************/
+
+  /*! exports provided: CreateJwt */
+
+  /***/
+  function srcSharedActionsJwtActionTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "CreateJwt", function () {
+      return CreateJwt;
+    });
+    /* harmony import */
+
+
+    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! tslib */
+    "./node_modules/tslib/tslib.es6.js");
+
+    var CreateJwt = function CreateJwt(payload) {
+      _classCallCheck(this, CreateJwt);
+
+      this.payload = payload;
+    };
+
+    CreateJwt.type = "[Jwt] Create";
+    /***/
+  },
+
+  /***/
+  "./src/shared/states/jwt-state.ts":
+  /*!****************************************!*\
+    !*** ./src/shared/states/jwt-state.ts ***!
+    \****************************************/
+
+  /*! exports provided: JwtState */
+
+  /***/
+  function srcSharedStatesJwtStateTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "JwtState", function () {
+      return JwtState;
+    });
+    /* harmony import */
+
+
+    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! tslib */
+    "./node_modules/tslib/tslib.es6.js");
+    /* harmony import */
+
+
+    var _ngxs_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! @ngxs/store */
+    "./node_modules/@ngxs/store/fesm2015/ngxs-store.js");
+    /* harmony import */
+
+
+    var _actions_jwt_action__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+    /*! ../actions/jwt-action */
+    "./src/shared/actions/jwt-action.ts");
+
+    var JwtState = /*#__PURE__*/function () {
+      function JwtState() {
+        _classCallCheck(this, JwtState);
+      }
+
+      _createClass(JwtState, [{
+        key: "Create",
+        value: function Create(_ref2, _ref3) {
+          var getState = _ref2.getState,
+              patchState = _ref2.patchState;
+          var payload = _ref3.payload;
+          var state = getState();
+          patchState({
+            jwt: payload
+          });
+        }
+      }], [{
+        key: "getToken",
+        value: function getToken(state) {
+          return state.jwt.token;
+        }
+      }]);
+
+      return JwtState;
+    }();
+
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["Action"])(_actions_jwt_action__WEBPACK_IMPORTED_MODULE_2__["CreateJwt"])], JwtState.prototype, "Create", null);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["Selector"])()], JwtState, "getToken", null);
+    JwtState = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["State"])({
+      name: "jwt",
+      defaults: {
+        jwt: {
+          "token": ""
+        }
+      }
+    })], JwtState);
     /***/
   },
 

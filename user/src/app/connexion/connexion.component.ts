@@ -5,6 +5,9 @@ import {User} from '../models/user';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { CreateJwt } from '../../shared/actions/jwt-action';
+
 
 @Component({
   selector: 'app-connexion',
@@ -16,7 +19,7 @@ export class ConnexionComponent implements OnInit {
   
   userForm : FormGroup;
 
-  constructor(private fb: FormBuilder,private api : ApiService, private router: Router) { 
+  constructor(private fb: FormBuilder,private api : ApiService, private router: Router,private store : Store) { 
 
    }
 
@@ -35,6 +38,7 @@ export class ConnexionComponent implements OnInit {
 
   Deconnexion () {
     this.user$ = null;
+    this.store.dispatch(new CreateJwt({"token":""}));
     this.router.navigate(['/connexion']);
    
   }

@@ -6,6 +6,8 @@ import { ConnexionComponent } from './connexion/connexion.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApiHttpInterceptor } from './api-http-interceptor';
+import { NgxsModule } from '@ngxs/store';
+
 
 const routes: Routes = [
   { path: 'connexion', component: ConnexionComponent }
@@ -21,7 +23,8 @@ ReactiveFormsModule
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    NgxsModule.forRoot ()
   ],
   providers: [
     {
