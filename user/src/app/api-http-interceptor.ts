@@ -5,13 +5,10 @@ import { tap} from 'rxjs/operators';
 import { of} from "rxjs";
 import { Router } from '@angular/router';
 
-const API_DOMAIN  = "";
-
 @Injectable()
 export class ApiHttpInterceptor implements HttpInterceptor {
 
-
-  constructor( private router: Router) {  }
+constructor( private router: Router) {  }
 
 OAUTH_TOKEN : String = "";
 
@@ -36,7 +33,7 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
           case 401:
             this.OAUTH_TOKEN = "";
             console.log(`Erreur 401`);
-            this.router.navigate(['/connexion']);
+            this.router.navigate(['/']);
             break;
       }
       return of(null);

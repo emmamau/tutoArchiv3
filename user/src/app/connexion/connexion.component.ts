@@ -35,7 +35,7 @@ export class ConnexionComponent implements OnInit {
 
   Deconnexion () {
     this.user$ = null;
-    this.router.navigate(['/connexion']);
+    this.router.navigate(['/']);
    
   }
 

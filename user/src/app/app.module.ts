@@ -8,7 +8,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApiHttpInterceptor } from './api-http-interceptor';
 
 const routes: Routes = [
-  { path: 'connexion', component: ConnexionComponent }
+  { path: '', component: ConnexionComponent }
 ];
 
 ReactiveFormsModule
