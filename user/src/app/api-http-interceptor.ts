@@ -4,20 +4,36 @@ import {Observable, } from 'rxjs';
 import { tap} from 'rxjs/operators';
 import { of} from "rxjs";
 import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { CreateJwt } from '../shared/actions/jwt-action';
+import { Actions, ofActionDispatched } from '@ngxs/store';
+import { JwtState } from 'src/shared/states/jwt-state';
 
 const API_DOMAIN  = "";
 
+// testgit
 @Injectable()
 export class ApiHttpInterceptor implements HttpInterceptor {
 
+token$  : Observable<String>;
+jwtToken : String = "";
 
-  constructor( private router: Router) {  }
+constructor( private router: Router, private store :Store, private actions$: Actions) { 
+  this.token$ = this.store.select(JwtState.getToken);
 
-OAUTH_TOKEN : String = "";
+  this.actions$.pipe(ofActionDispatched(CreateJwt))
+  .subscribe(({ payload }) => { this.jwtToken = payload.token;console.log ("jwtToken modifié : " + this.jwtToken);} );
+ }
 
-intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const clone = req.clone({ setHeaders: { Authorization: `Bearer ${this.OAUTH_TOKEN}` }});
-    return next.handle(clone).pipe(tap(
+intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {  
+  
+  if (this.jwtToken == "") {
+    req = req;
+  } else {
+    req = req.clone({ setHeaders: { Authorization: `Bearer ${this.jwtToken}` }});
+  }
+ 
+  return next.handle(req).pipe(tap(
       (evt : HttpEvent<any>)  => {
         if (evt instanceof HttpResponse) {
           let tab :  Array<String> ;                                                                                                                                                                                                                                                                                                                                
@@ -25,16 +41,17 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
           if (enteteAuthorization != null ) {
             tab = enteteAuthorization.split(/Bearer\s+(.*)$/i);
             if (tab.length  > 1) {
-              this.OAUTH_TOKEN = tab [1];
+              this.jwtToken = tab [1];
+              this.store.dispatch(new CreateJwt({"token":this.jwtToken}));
             }
-            console.log ("Bearer : " + this.OAUTH_TOKEN);
+            console.log ("Bearer : " + this.jwtToken);
           }
       }  
     }, 
     (error: HttpErrorResponse) => {
         switch (error.status) {
           case 401:
-            this.OAUTH_TOKEN = "";
+            this.store.dispatch(new CreateJwt({"token":""}));
             console.log(`Erreur 401`);
             this.router.navigate(['/connexion']);
             break;
