@@ -325,7 +325,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const API_DOMAIN = "";
 let ApiHttpInterceptor = class ApiHttpInterceptor {
     constructor(router) {
         this.router = router;
@@ -350,7 +349,7 @@ let ApiHttpInterceptor = class ApiHttpInterceptor {
                 case 401:
                     this.OAUTH_TOKEN = "";
                     console.log(`Erreur 401`);
-                    this.router.navigate(['/connexion']);
+                    this.router.navigate(['/']);
                     break;
             }
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(null);
@@ -492,7 +491,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const routes = [
-    { path: 'connexion', component: _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"] }
+    { path: '', component: _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"] }
 ];
 _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"];
 let AppModule = class AppModule {
@@ -573,7 +572,7 @@ let ConnexionComponent = class ConnexionComponent {
     }
     Deconnexion() {
         this.user$ = null;
-        this.router.navigate(['/connexion']);
+        this.router.navigate(['/']);
     }
 };
 ConnexionComponent.ctorParameters = () => [

@@ -735,8 +735,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     /*! @angular/router */
     "./node_modules/@angular/router/fesm2015/router.js");
 
-    var API_DOMAIN = "";
-
     var ApiHttpInterceptor = /*#__PURE__*/function () {
       function ApiHttpInterceptor(router) {
         _classCallCheck(this, ApiHttpInterceptor);
@@ -776,7 +774,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 _this.OAUTH_TOKEN = "";
                 console.log("Erreur 401");
 
-                _this.router.navigate(['/connexion']);
+                _this.router.navigate(['/']);
 
                 break;
             }
@@ -1029,7 +1027,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     "./src/app/api-http-interceptor.ts");
 
     var routes = [{
-      path: 'connexion',
+      path: '',
       component: _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"]
     }];
     _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"];
@@ -1152,7 +1150,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         key: "Deconnexion",
         value: function Deconnexion() {
           this.user$ = null;
-          this.router.navigate(['/connexion']);
+          this.router.navigate(['/']);
         }
       }]);
 
