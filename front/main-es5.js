@@ -746,12 +746,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
     /*! ../shared/actions/jwt-action */
     "./src/shared/actions/jwt-action.ts");
-    /* harmony import */
-
-
-    var src_shared_states_jwt_state__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
-    /*! src/shared/states/jwt-state */
-    "./src/shared/states/jwt-state.ts");
 
     var API_DOMAIN = ""; // testgit
 
@@ -765,7 +759,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         this.store = store;
         this.actions$ = actions$;
         this.jwtToken = "";
-        this.token$ = this.store.select(src_shared_states_jwt_state__WEBPACK_IMPORTED_MODULE_8__["JwtState"].getToken);
         this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"])).subscribe(function (_ref) {
           var payload = _ref.payload;
           _this.jwtToken = payload.token;
@@ -1380,83 +1373,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     };
 
     CreateJwt.type = "[Jwt] Create";
-    /***/
-  },
-
-  /***/
-  "./src/shared/states/jwt-state.ts":
-  /*!****************************************!*\
-    !*** ./src/shared/states/jwt-state.ts ***!
-    \****************************************/
-
-  /*! exports provided: JwtState */
-
-  /***/
-  function srcSharedStatesJwtStateTs(module, __webpack_exports__, __webpack_require__) {
-    "use strict";
-
-    __webpack_require__.r(__webpack_exports__);
-    /* harmony export (binding) */
-
-
-    __webpack_require__.d(__webpack_exports__, "JwtState", function () {
-      return JwtState;
-    });
-    /* harmony import */
-
-
-    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-    /*! tslib */
-    "./node_modules/tslib/tslib.es6.js");
-    /* harmony import */
-
-
-    var _ngxs_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-    /*! @ngxs/store */
-    "./node_modules/@ngxs/store/fesm2015/ngxs-store.js");
-    /* harmony import */
-
-
-    var _actions_jwt_action__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-    /*! ../actions/jwt-action */
-    "./src/shared/actions/jwt-action.ts");
-
-    var JwtState = /*#__PURE__*/function () {
-      function JwtState() {
-        _classCallCheck(this, JwtState);
-      }
-
-      _createClass(JwtState, [{
-        key: "Create",
-        value: function Create(_ref2, _ref3) {
-          var getState = _ref2.getState,
-              patchState = _ref2.patchState;
-          var payload = _ref3.payload;
-          var state = getState();
-          patchState({
-            jwt: payload
-          });
-        }
-      }], [{
-        key: "getToken",
-        value: function getToken(state) {
-          return state.jwt.token;
-        }
-      }]);
-
-      return JwtState;
-    }();
-
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["Action"])(_actions_jwt_action__WEBPACK_IMPORTED_MODULE_2__["CreateJwt"])], JwtState.prototype, "Create", null);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["Selector"])()], JwtState, "getToken", null);
-    JwtState = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["State"])({
-      name: "jwt",
-      defaults: {
-        jwt: {
-          "token": ""
-        }
-      }
-    })], JwtState);
     /***/
   },
 
