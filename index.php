@@ -19,6 +19,22 @@ function  addHeaders (Response $response) : Response {
     return $response;
 }
 
+
+function createJwt (Response $response) : Response {
+    $userid = "emma";
+    $email = "emma@emma.fr";
+    $issuedAt = time();
+    $expirationTime = $issuedAt + 60; // jwt valid for 60 seconds from the issued time
+    $payload = array(
+        'userid' => $userid,
+        'iat' => $issuedAt,
+        'exp' => $expirationTime
+    );
+    $token_jwt = JWT::encode($payload,JWT_SECRET, "HS256");
+    $response = $response->withHeader("Authorization", "Bearer {$token_jwt}");
+    return $response;
+}
+
 const JWT_SECRET = "MET02-CNAM";
 
 // API Nécessitant un Jwt valide
@@ -26,17 +42,17 @@ $app->get('/api/auth/{login}', function (Request $request, Response $response, $
     global $entityManager;
 
     $login = $args['login'];
-
-    $response = addHeaders ($response);
-
+    
     $utilisateurRepository = $entityManager->getRepository('Utilisateur');
     $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login));
     if ($utilisateur) {
         $data = array('nom' => $utilisateur->getNom(), 'prenom' => $utilisateur->getPrenom());
+        $response = addHeaders ($response);
+        $response = createJwT ($response);
+        $response->getBody()->write(json_encode($data));
     } else {
         $response = $response->withStatus(401);
     }
-    $response->getBody()->write(json_encode($data));
 
     return $response;
 });
@@ -56,25 +72,12 @@ $app->post('/api/login', function (Request $request, Response $response, $args) 
     if (!preg_match("/[a-zA-Z0-9]{1,20}/",$pass))  {
         $err=true;
     }
-    //$pass = hash('sha256',$pass);
-    $response = addHeaders ($response);
-    
     if (!$err) {
         $utilisateurRepository = $entityManager->getRepository('Utilisateur');
         $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login, 'password' => $pass));
         if ($utilisateur and $login == $utilisateur->getLogin() and $pass == $utilisateur->getPassword()) {
-            $userid = "emma";
-            $email = "emma@emma.fr";
-            $issuedAt = time();
-            $expirationTime = $issuedAt + 60; // jwt valid for 60 seconds from the issued time
-            $payload = array(
-                'userid' => $userid,
-                'iat' => $issuedAt,
-                'exp' => $expirationTime
-            );
-            $token_jwt = JWT::encode($payload,JWT_SECRET, "HS256");
-            $response = $response->withHeader("Authorization", "Bearer {$token_jwt}")->withHeader("Content-Type", "application/json");
-
+            $response = addHeaders ($response);
+            $response = createJwT ($response);
             $data = array('nom' => $utilisateur->getNom(), 'prenom' => $utilisateur->getPrenom());
             $response->getBody()->write(json_encode($data));
         } else {          
