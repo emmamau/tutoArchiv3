@@ -747,8 +747,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     /*! ../shared/actions/jwt-action */
     "./src/shared/actions/jwt-action.ts");
 
-    var API_DOMAIN = ""; // testgit
-
     var ApiHttpInterceptor = /*#__PURE__*/function () {
       function ApiHttpInterceptor(router, store, actions$) {
         var _this = this;
@@ -771,9 +769,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         value: function intercept(req, next) {
           var _this2 = this;
 
-          if (this.jwtToken == "") {
-            req = req;
-          } else {
+          if (this.jwtToken != "") {
             req = req.clone({
               setHeaders: {
                 Authorization: "Bearer ".concat(this.jwtToken)
@@ -809,7 +805,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
                 console.log("Erreur 401");
 
-                _this2.router.navigate(['/connexion']);
+                _this2.router.navigate(['/']);
 
                 break;
             }
@@ -1072,7 +1068,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     "./node_modules/@ngxs/store/fesm2015/ngxs-store.js");
 
     var routes = [{
-      path: 'connexion',
+      path: '',
       component: _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"]
     }];
     _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"];
@@ -1211,7 +1207,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           this.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_6__["CreateJwt"]({
             "token": ""
           }));
-          this.router.navigate(['/connexion']);
+          this.router.navigate(['/']);
         }
       }]);
 

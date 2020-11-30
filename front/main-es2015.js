@@ -330,8 +330,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const API_DOMAIN = "";
-// testgit
 let ApiHttpInterceptor = class ApiHttpInterceptor {
     constructor(router, store, actions$) {
         this.router = router;
@@ -342,10 +340,7 @@ let ApiHttpInterceptor = class ApiHttpInterceptor {
             .subscribe(({ payload }) => { this.jwtToken = payload.token; console.log("jwtToken modifié : " + this.jwtToken); });
     }
     intercept(req, next) {
-        if (this.jwtToken == "") {
-            req = req;
-        }
-        else {
+        if (this.jwtToken != "") {
             req = req.clone({ setHeaders: { Authorization: `Bearer ${this.jwtToken}` } });
         }
         return next.handle(req).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])((evt) => {
@@ -366,7 +361,7 @@ let ApiHttpInterceptor = class ApiHttpInterceptor {
                 case 401:
                     this.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]({ "token": "" }));
                     console.log(`Erreur 401`);
-                    this.router.navigate(['/connexion']);
+                    this.router.navigate(['/']);
                     break;
             }
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(null);
@@ -512,7 +507,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const routes = [
-    { path: 'connexion', component: _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"] }
+    { path: '', component: _connexion_connexion_component__WEBPACK_IMPORTED_MODULE_5__["ConnexionComponent"] }
 ];
 _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"];
 let AppModule = class AppModule {
@@ -600,7 +595,7 @@ let ConnexionComponent = class ConnexionComponent {
     Deconnexion() {
         this.user$ = null;
         this.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_6__["CreateJwt"]({ "token": "" }));
-        this.router.navigate(['/connexion']);
+        this.router.navigate(['/']);
     }
 };
 ConnexionComponent.ctorParameters = () => [
