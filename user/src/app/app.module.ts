@@ -10,7 +10,7 @@ import { NgxsModule } from '@ngxs/store';
 
 
 const routes: Routes = [
-  { path: 'connexion', component: ConnexionComponent }
+  { path: '', component: ConnexionComponent }
 ];
 
 ReactiveFormsModule

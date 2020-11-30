@@ -18,7 +18,7 @@ export class ApiService {
   public postLogin (login:String,password:String):Observable<User>  {
     let data :String;
     let httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded'  })};
+      headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })};
       data = "login=" + login + "&pass="+password; 
       return this.httpClient.post<User> (this.urlApiLogin,data,httpOptions);  
   }

@@ -9,9 +9,6 @@ import { CreateJwt } from '../shared/actions/jwt-action';
 import { Actions, ofActionDispatched } from '@ngxs/store';
 import { JwtState } from 'src/shared/states/jwt-state';
 
-const API_DOMAIN  = "";
-
-// testgit
 @Injectable()
 export class ApiHttpInterceptor implements HttpInterceptor {
 
@@ -24,9 +21,7 @@ constructor( private router: Router, private store :Store, private actions$: Act
 
 intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {  
   
-  if (this.jwtToken == "") {
-    req = req;
-  } else {
+  if (this.jwtToken != "") {
     req = req.clone({ setHeaders: { Authorization: `Bearer ${this.jwtToken}` }});
   }
  
@@ -50,7 +45,7 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
           case 401:
             this.store.dispatch(new CreateJwt({"token":""}));
             console.log(`Erreur 401`);
-            this.router.navigate(['/connexion']);
+            this.router.navigate(['/']);
             break;
       }
       return of(null);

@@ -19,9 +19,7 @@ export class ConnexionComponent implements OnInit {
   
   userForm : FormGroup;
 
-  constructor(private fb: FormBuilder,private api : ApiService, private router: Router,private store : Store) { 
-
-   }
+  constructor(private fb: FormBuilder,private api : ApiService, private router: Router,private store : Store) { }
 
   user$ : Observable<User>;
 
@@ -39,9 +37,6 @@ export class ConnexionComponent implements OnInit {
   Deconnexion () {
     this.user$ = null;
     this.store.dispatch(new CreateJwt({"token":""}));
-    this.router.navigate(['/connexion']);
-   
+    this.router.navigate(['/']);
   }
-
-
 }
