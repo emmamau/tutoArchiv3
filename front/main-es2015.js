@@ -321,8 +321,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
 /* harmony import */ var _ngxs_store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ngxs/store */ "./node_modules/@ngxs/store/fesm2015/ngxs-store.js");
 /* harmony import */ var _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../shared/actions/jwt-action */ "./src/shared/actions/jwt-action.ts");
-/* harmony import */ var src_shared_states_jwt_state__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/shared/states/jwt-state */ "./src/shared/states/jwt-state.ts");
-
 
 
 
@@ -340,7 +338,6 @@ let ApiHttpInterceptor = class ApiHttpInterceptor {
         this.store = store;
         this.actions$ = actions$;
         this.jwtToken = "";
-        this.token$ = this.store.select(src_shared_states_jwt_state__WEBPACK_IMPORTED_MODULE_8__["JwtState"].getToken);
         this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]))
             .subscribe(({ payload }) => { this.jwtToken = payload.token; console.log("jwtToken modifié : " + this.jwtToken); });
     }
@@ -700,52 +697,6 @@ class CreateJwt {
     }
 }
 CreateJwt.type = "[Jwt] Create";
-
-
-/***/ }),
-
-/***/ "./src/shared/states/jwt-state.ts":
-/*!****************************************!*\
-  !*** ./src/shared/states/jwt-state.ts ***!
-  \****************************************/
-/*! exports provided: JwtState */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JwtState", function() { return JwtState; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _ngxs_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @ngxs/store */ "./node_modules/@ngxs/store/fesm2015/ngxs-store.js");
-/* harmony import */ var _actions_jwt_action__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions/jwt-action */ "./src/shared/actions/jwt-action.ts");
-
-
-
-let JwtState = class JwtState {
-    static getToken(state) {
-        return state.jwt.token;
-    }
-    Create({ getState, patchState }, { payload }) {
-        const state = getState();
-        patchState({
-            jwt: payload
-        });
-    }
-};
-tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-    Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["Action"])(_actions_jwt_action__WEBPACK_IMPORTED_MODULE_2__["CreateJwt"])
-], JwtState.prototype, "Create", null);
-tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-    Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["Selector"])()
-], JwtState, "getToken", null);
-JwtState = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-    Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_1__["State"])({
-        name: "jwt",
-        defaults: {
-            jwt: { "token": "" }
-        }
-    })
-], JwtState);
-
 
 
 /***/ }),

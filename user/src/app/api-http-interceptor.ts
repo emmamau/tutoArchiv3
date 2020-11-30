@@ -15,12 +15,9 @@ const API_DOMAIN  = "";
 @Injectable()
 export class ApiHttpInterceptor implements HttpInterceptor {
 
-token$  : Observable<String>;
 jwtToken : String = "";
 
 constructor( private router: Router, private store :Store, private actions$: Actions) { 
-  this.token$ = this.store.select(JwtState.getToken);
-
   this.actions$.pipe(ofActionDispatched(CreateJwt))
   .subscribe(({ payload }) => { this.jwtToken = payload.token;console.log ("jwtToken modifié : " + this.jwtToken);} );
  }
