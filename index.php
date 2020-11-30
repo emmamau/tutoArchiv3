@@ -42,7 +42,6 @@ $app->get('/api/auth/{login}', function (Request $request, Response $response, $
     global $entityManager;
 
     $login = $args['login'];
-
     
     $utilisateurRepository = $entityManager->getRepository('Utilisateur');
     $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login));
