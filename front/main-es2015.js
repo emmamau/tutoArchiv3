@@ -336,17 +336,7 @@ let ApiHttpInterceptor = class ApiHttpInterceptor {
         this.store = store;
         this.actions$ = actions$;
         this.jwtToken = "";
-        this.subscription = null;
-    }
-    ngOnInit() {
-        console.log("ngOnInit Interceptor");
         this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"])).subscribe(({ payload }) => { this.jwtToken = payload.token; console.log("jwtToken modifié : " + this.jwtToken); });
-    }
-    ngOnDestroy() {
-        console.log("ngDestroy Interceptor");
-        if (this.subscription != null) {
-            this.subscription.unsubscribe();
-        }
     }
     intercept(req, next) {
         if (this.jwtToken != "") {
