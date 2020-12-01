@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService } from "../api.service";
-import {Observable } from 'rxjs';
+import {Observable, Subscription } from 'rxjs';
 import {User} from '../models/user';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Validators } from '@angular/forms';
@@ -23,6 +23,9 @@ export class ConnexionComponent implements OnInit {
 
   user$ : Observable<User>;
 
+  subscription: Subscription = null;
+
+
   ngOnInit() {
     this.userForm = this.fb.group({
       login: ['', Validators.required],
@@ -30,8 +33,20 @@ export class ConnexionComponent implements OnInit {
     });
   }
 
+  ngOnDestroy () {
+    if (this.subscription != null) {
+      console.log ("unsubsribe");
+      this.subscription.unsubscribe ()  
+    }
+  }
+
+
   Connexion () {
-    this.api.postLogin (this.userForm.value.login,this.userForm.value.password).subscribe (j => {console.log (j) ; this.user$ = this.api.getLogin (this.userForm.value.login);},this.user$ = null);
+    if (this.subscription != null) {
+      console.log ("unsubsribe");
+      this.subscription.unsubscribe ()  
+    }
+    this.subscription = this.api.postLogin (this.userForm.value.login,this.userForm.value.password).subscribe (j => {console.log (j) ; this.user$ = this.api.getLogin (this.userForm.value.login);},this.user$ = null);
   }
 
   Deconnexion () {
