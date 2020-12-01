@@ -1,6 +1,6 @@
 import { Injectable} from '@angular/core';
 import {  HttpEvent,  HttpErrorResponse,   HttpInterceptor,    HttpHandler,     HttpRequest, HttpResponse} from '@angular/common/http';
-import {Observable, Subscription } from 'rxjs';
+import {Observable } from 'rxjs';
 import { tap} from 'rxjs/operators';
 import { of} from "rxjs";
 import { Router } from '@angular/router';
@@ -13,27 +13,10 @@ import { JwtState } from 'src/shared/states/jwt-state';
 export class ApiHttpInterceptor implements HttpInterceptor {
 
 jwtToken : String = "";
-subscription: Subscription = null;
 
-constructor( private router: Router, private store :Store, private actions$: Actions) { }
-
-ngOnInit () {
-  console.log ("ngOnInit Interceptor");
-
+constructor( private router: Router, private store :Store, private actions$: Actions) { 
   this.actions$.pipe(ofActionDispatched(CreateJwt)).subscribe(({ payload }) => { this.jwtToken = payload.token;console.log ("jwtToken modifié : " + this.jwtToken);} );
 }
-
-
-ngOnDestroy () {
-  console.log ("ngDestroy Interceptor");
-
-  if (this.subscription != null) {
-    this.subscription.unsubscribe ()  
-  }
-}
-
-
-
  
 intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {  
   
