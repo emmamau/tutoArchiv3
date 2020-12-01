@@ -336,8 +336,17 @@ let ApiHttpInterceptor = class ApiHttpInterceptor {
         this.store = store;
         this.actions$ = actions$;
         this.jwtToken = "";
-        this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]))
-            .subscribe(({ payload }) => { this.jwtToken = payload.token; console.log("jwtToken modifié : " + this.jwtToken); });
+        this.subscription = null;
+    }
+    ngOnInit() {
+        console.log("ngOnInit Interceptor");
+        this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"])).subscribe(({ payload }) => { this.jwtToken = payload.token; console.log("jwtToken modifié : " + this.jwtToken); });
+    }
+    ngOnDestroy() {
+        console.log("ngDestroy Interceptor");
+        if (this.subscription != null) {
+            this.subscription.unsubscribe();
+        }
     }
     intercept(req, next) {
         if (this.jwtToken != "") {
@@ -582,6 +591,7 @@ let ConnexionComponent = class ConnexionComponent {
         this.api = api;
         this.router = router;
         this.store = store;
+        this.subscription = null;
     }
     ngOnInit() {
         this.userForm = this.fb.group({
@@ -589,8 +599,18 @@ let ConnexionComponent = class ConnexionComponent {
             password: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required]
         });
     }
+    ngOnDestroy() {
+        if (this.subscription != null) {
+            console.log("unsubsribe");
+            this.subscription.unsubscribe();
+        }
+    }
     Connexion() {
-        this.api.postLogin(this.userForm.value.login, this.userForm.value.password).subscribe(j => { console.log(j); this.user$ = this.api.getLogin(this.userForm.value.login); }, this.user$ = null);
+        if (this.subscription != null) {
+            console.log("unsubsribe");
+            this.subscription.unsubscribe();
+        }
+        this.subscription = this.api.postLogin(this.userForm.value.login, this.userForm.value.password).subscribe(j => { console.log(j); this.user$ = this.api.getLogin(this.userForm.value.login); }, this.user$ = null);
     }
     Deconnexion() {
         this.user$ = null;

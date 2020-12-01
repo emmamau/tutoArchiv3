@@ -749,22 +749,37 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
     var ApiHttpInterceptor = /*#__PURE__*/function () {
       function ApiHttpInterceptor(router, store, actions$) {
-        var _this = this;
-
         _classCallCheck(this, ApiHttpInterceptor);
 
         this.router = router;
         this.store = store;
         this.actions$ = actions$;
         this.jwtToken = "";
-        this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"])).subscribe(function (_ref) {
-          var payload = _ref.payload;
-          _this.jwtToken = payload.token;
-          console.log("jwtToken modifié : " + _this.jwtToken);
-        });
+        this.subscription = null;
       }
 
       _createClass(ApiHttpInterceptor, [{
+        key: "ngOnInit",
+        value: function ngOnInit() {
+          var _this = this;
+
+          console.log("ngOnInit Interceptor");
+          this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"])).subscribe(function (_ref) {
+            var payload = _ref.payload;
+            _this.jwtToken = payload.token;
+            console.log("jwtToken modifié : " + _this.jwtToken);
+          });
+        }
+      }, {
+        key: "ngOnDestroy",
+        value: function ngOnDestroy() {
+          console.log("ngDestroy Interceptor");
+
+          if (this.subscription != null) {
+            this.subscription.unsubscribe();
+          }
+        }
+      }, {
         key: "intercept",
         value: function intercept(req, next) {
           var _this2 = this;
@@ -1180,6 +1195,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         this.api = api;
         this.router = router;
         this.store = store;
+        this.subscription = null;
       }
 
       _createClass(ConnexionComponent, [{
@@ -1191,11 +1207,24 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           });
         }
       }, {
+        key: "ngOnDestroy",
+        value: function ngOnDestroy() {
+          if (this.subscription != null) {
+            console.log("unsubsribe");
+            this.subscription.unsubscribe();
+          }
+        }
+      }, {
         key: "Connexion",
         value: function Connexion() {
           var _this3 = this;
 
-          this.api.postLogin(this.userForm.value.login, this.userForm.value.password).subscribe(function (j) {
+          if (this.subscription != null) {
+            console.log("unsubsribe");
+            this.subscription.unsubscribe();
+          }
+
+          this.subscription = this.api.postLogin(this.userForm.value.login, this.userForm.value.password).subscribe(function (j) {
             console.log(j);
             _this3.user$ = _this3.api.getLogin(_this3.userForm.value.login);
           }, this.user$ = null);
