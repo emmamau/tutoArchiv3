@@ -749,37 +749,22 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
     var ApiHttpInterceptor = /*#__PURE__*/function () {
       function ApiHttpInterceptor(router, store, actions$) {
+        var _this = this;
+
         _classCallCheck(this, ApiHttpInterceptor);
 
         this.router = router;
         this.store = store;
         this.actions$ = actions$;
         this.jwtToken = "";
-        this.subscription = null;
+        this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"])).subscribe(function (_ref) {
+          var payload = _ref.payload;
+          _this.jwtToken = payload.token;
+          console.log("jwtToken modifié : " + _this.jwtToken);
+        });
       }
 
       _createClass(ApiHttpInterceptor, [{
-        key: "ngOnInit",
-        value: function ngOnInit() {
-          var _this = this;
-
-          console.log("ngOnInit");
-          this.subscription = this.actions$.pipe(Object(_ngxs_store__WEBPACK_IMPORTED_MODULE_6__["ofActionDispatched"])(_shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"])).subscribe(function (_ref) {
-            var payload = _ref.payload;
-            _this.jwtToken = payload.token;
-            console.log("jwtToken modifié : " + _this.jwtToken);
-          });
-        }
-      }, {
-        key: "ngOnDestroy",
-        value: function ngOnDestroy() {
-          console.log("ngOnDestroy");
-
-          if (this.subscription != null) {
-            this.subscription.unsubscribe();
-          }
-        }
-      }, {
         key: "intercept",
         value: function intercept(req, next) {
           var _this2 = this;
