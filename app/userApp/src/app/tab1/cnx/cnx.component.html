@@ -1,0 +1,21 @@
+<div *ngIf="user$ | async as u">
+    {{u.nom}}
+    {{u.prenom}}
+
+    <button (click)="Deconnexion()">Deconnexion</button>
+
+</div>
+
+<div *ngIf="user$ == null">
+<form [formGroup]="userForm" >
+    <ion-item>
+      <ion-label>Login</ion-label>
+      <ion-input type="text" formControlName="login"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Password</ion-label>
+      <ion-input formControlName="password"></ion-input>
+    </ion-item>
+    <button ion-button (click)="Connexion()" [disabled]="!userForm.valid">Connexion</button>
+  </form>
+  </div>
