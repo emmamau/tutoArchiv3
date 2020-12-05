@@ -25,7 +25,6 @@ export class ConnexionComponent implements OnInit {
 
   subscription: Subscription = null;
 
-
   ngOnInit() {
     this.userForm = this.fb.group({
       login: ['', Validators.required],
