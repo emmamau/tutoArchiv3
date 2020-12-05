@@ -31,7 +31,7 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
           if (enteteAuthorization != null ) {
             tab = enteteAuthorization.split(/Bearer\s+(.*)$/i);
             if (tab.length  > 1) {
-              this.jwtToken = tab [1];
+              //this.jwtToken = tab [1];
               this.store.dispatch(new CreateJwt({"token":this.jwtToken}));
             }
             console.log ("Bearer : " + this.jwtToken);
