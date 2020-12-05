@@ -45,7 +45,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<div *ngIf=\"user$ | async as u\">\n    {{u.nom}}\n    {{u.prenom}}\n\n    <button (click)=\"Deconnexion()\">Deconnexion</button>\n\n</div>\n\n<div *ngIf=\"user$ == null\">\n\n    <form [formGroup]=\"userForm\" >\n    <label>\n        Login :\n        <input type=\"text\" formControlName=\"login\" id=\"login\" >\n    </label>\n\n    <label>\n        Password :\n        <input type=\"text\" formControlName=\"password\" id=\"password\" >\n    </label>\n\n    <button (click)=\"Connexion()\"[disabled]=\"!userForm.valid\">Connexion</button>\n\n    </form>\n    \n</div>\n\n\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<div *ngIf=\"user$ | async as u\">\n    {{u.nom}}\n    {{u.prenom}}\n\n    <button (click)=\"Deconnexion()\">Deconnexion</button>\n\n</div>\n\n<div *ngIf=\"user$ == null\">\n    <form [formGroup]=\"userForm\" >\n        <label>\n            Login :\n            <input type=\"text\" formControlName=\"login\" id=\"login\" >\n        </label>\n\n        <label>\n            Password :\n            <input type=\"text\" formControlName=\"password\" id=\"password\" >\n        </label>\n\n        <button (click)=\"Connexion()\"[disabled]=\"!userForm.valid\">Connexion</button>\n    </form>\n    \n</div>\n\n\n");
 
 /***/ }),
 
