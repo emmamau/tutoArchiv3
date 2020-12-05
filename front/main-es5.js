@@ -786,7 +786,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
                 tab = enteteAuthorization.split(/Bearer\s+(.*)$/i);
 
                 if (tab.length > 1) {
-                  //this.jwtToken = tab [1];
+                  _this2.jwtToken = tab[1];
+
                   _this2.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]({
                     "token": _this2.jwtToken
                   }));
