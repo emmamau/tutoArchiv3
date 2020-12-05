@@ -186,7 +186,7 @@ Tab1PageRoutingModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<div *ngIf=\"user$ | async as u\">\n    {{u.nom}}\n    {{u.prenom}}\n\n    <button (click)=\"Deconnexion()\">Deconnexion</button>\n\n</div>\n\n<div *ngIf=\"user$ == null\">\n<form [formGroup]=\"userForm\" >\n    <ion-item>\n      <ion-label>Login</ion-label>\n      <ion-input type=\"text\" formControlName=\"login\"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label>Password</ion-label>\n      <ion-input formControlName=\"password\"></ion-input>\n    </ion-item>\n    <button ion-button (click)=\"Connexion()\" [disabled]=\"!userForm.valid\">Connexion</button>\n  </form>\n  </div>");
+/* harmony default export */ __webpack_exports__["default"] = ("<div *ngIf=\"user$ | async as u\">\n    {{u.nom}}\n    {{u.prenom}}\n\n    <button ion-button (click)=\"Deconnexion()\">Deconnexion</button>\n\n</div>\n\n<div *ngIf=\"user$ == null\">\n<form [formGroup]=\"userForm\" >\n    <ion-item>\n      <ion-label>Login</ion-label>\n      <ion-input type=\"text\" formControlName=\"login\"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label>Password</ion-label>\n      <ion-input formControlName=\"password\"></ion-input>\n    </ion-item>\n    <button ion-button (click)=\"Connexion()\" [disabled]=\"!userForm.valid\">Connexion</button>\n  </form>\n  </div>");
 
 /***/ }),
 
