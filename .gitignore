@@ -2,3 +2,5 @@ vendor/
 client/
 user/node_modules/
 node_modules/
+app/userApp/android
+app/userApp/www
