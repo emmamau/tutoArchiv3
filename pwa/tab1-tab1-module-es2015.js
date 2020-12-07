@@ -268,11 +268,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const URI = "https://cnam67.herokuapp.com";
 let ApiService = class ApiService {
     constructor(httpClient) {
         this.httpClient = httpClient;
-        this.urlApiLogin = "/api/login";
-        this.urlApiAuth = "/api/auth/";
+        this.urlApiLogin = URI + "/api/login";
+        this.urlApiAuth = URI + "/api/auth/";
         this.tokenParse = "";
     }
     postLogin(login, password) {

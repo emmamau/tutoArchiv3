@@ -481,13 +481,15 @@
       /*! @angular/common/http */
       "tk/3");
 
+      var URI = "https://cnam67.herokuapp.com";
+
       var ApiService = /*#__PURE__*/function () {
         function ApiService(httpClient) {
           _classCallCheck(this, ApiService);
 
           this.httpClient = httpClient;
-          this.urlApiLogin = "/api/login";
-          this.urlApiAuth = "/api/auth/";
+          this.urlApiLogin = URI + "/api/login";
+          this.urlApiAuth = URI + "/api/auth/";
           this.tokenParse = "";
         }
 
