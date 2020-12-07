@@ -23,9 +23,7 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
     req = req.clone({ setHeaders: { Authorization: `Bearer ${this.jwtToken}` }});
   }
  
-  if (!req.url.includes ("cnam67.herokuapp.com")) {
-    return next.handle(req);   
-  } else return next.handle(req).pipe(tap(
+  return next.handle(req).pipe(tap(
       (evt : HttpEvent<any>)  => {
         if (evt instanceof HttpResponse) {
           let tab :  Array<String> ;                                                                                                                                                                                                                                                                                                                                
