@@ -5,12 +5,17 @@ import { tap,catchError} from 'rxjs/operators';
 import { User } from './models/user';
 import {HttpClient, HttpHeaders,HttpResponse } from '@angular/common/http'
 
+
+const URI = "https://cnam67.herokuapp.com";
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class ApiService {
-  urlApiLogin = "/api/login";
-  urlApiAuth = "/api/auth/";
+  
+  urlApiLogin = URI + "/api/login";
+  urlApiAuth = URI + "/api/auth/";
   tokenParse : String = "";
 
   constructor(private httpClient : HttpClient) { }
