@@ -206,33 +206,29 @@ let ApiHttpInterceptor = class ApiHttpInterceptor {
         if (this.jwtToken != "") {
             req = req.clone({ setHeaders: { Authorization: `Bearer ${this.jwtToken}` } });
         }
-        if (!req.url.includes("cnam67.herokuapp.com")) {
-            return next.handle(req);
-        }
-        else
-            return next.handle(req).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])((evt) => {
-                if (evt instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpResponse"]) {
-                    let tab;
-                    let enteteAuthorization = evt.headers.get("Authorization");
-                    if (enteteAuthorization != null) {
-                        tab = enteteAuthorization.split(/Bearer\s+(.*)$/i);
-                        if (tab.length > 1) {
-                            this.jwtToken = tab[1];
-                            this.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]({ "token": this.jwtToken }));
-                        }
-                        console.log("Bearer : " + this.jwtToken);
+        return next.handle(req).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])((evt) => {
+            if (evt instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpResponse"]) {
+                let tab;
+                let enteteAuthorization = evt.headers.get("Authorization");
+                if (enteteAuthorization != null) {
+                    tab = enteteAuthorization.split(/Bearer\s+(.*)$/i);
+                    if (tab.length > 1) {
+                        this.jwtToken = tab[1];
+                        this.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]({ "token": this.jwtToken }));
                     }
+                    console.log("Bearer : " + this.jwtToken);
                 }
-            }, (error) => {
-                switch (error.status) {
-                    case 401:
-                        this.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]({ "token": "" }));
-                        console.log(`Erreur 401`);
-                        this.router.navigate(['/']);
-                        break;
-                }
-                return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(null);
-            }));
+            }
+        }, (error) => {
+            switch (error.status) {
+                case 401:
+                    this.store.dispatch(new _shared_actions_jwt_action__WEBPACK_IMPORTED_MODULE_7__["CreateJwt"]({ "token": "" }));
+                    console.log(`Erreur 401`);
+                    this.router.navigate(['/']);
+                    break;
+            }
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["of"])(null);
+        }));
     }
 };
 ApiHttpInterceptor.ctorParameters = () => [

@@ -397,9 +397,7 @@
               });
             }
 
-            if (!req.url.includes("cnam67.herokuapp.com")) {
-              return next.handle(req);
-            } else return next.handle(req).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (evt) {
+            return next.handle(req).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (evt) {
               if (evt instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpResponse"]) {
                 var tab;
                 var enteteAuthorization = evt.headers.get("Authorization");

@@ -45,6 +45,11 @@ function createJwt (Response $response) : Response {
 
 const JWT_SECRET = "MET02-CNAM";
 
+$app->options('/api/auth/{login}', function (Request $request, Response $response, $args) {
+    return addHeaders ($response);
+});
+
+
 // API Nécessitant un Jwt valide
 $app->get('/api/auth/{login}', function (Request $request, Response $response, $args) {
     global $entityManager;
