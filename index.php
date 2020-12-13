@@ -12,11 +12,11 @@ require_once __DIR__ . '/bootstrap.php';
 
 $app = AppFactory::create();
 
-function  addHeaders (Response $response) : Response {
+function  addHeaders (Response $response, string $orign = "herokuapp") : Response {
 
     $response = $response
     ->withHeader("Content-Type", "application/json")
-    ->withHeader('Access-Control-Allow-Origin', "*")
+    ->withHeader('Access-Control-Allow-Origin', (str_contains($origin, 'herokuapp')?'http://cnam67.herokuapp.com':'http://localhost'))
     ->withHeader('Access-Control-Allow-Headers', 'Content-Type,  Authorization')
     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
     ->withHeader('Access-Control-Expose-Headers', 'Authorization');
@@ -47,7 +47,7 @@ $app->options('/api/auth/{login}', function (Request $request, Response $respons
     // Evite que le front demande une confirmation à chaque modification
     $response = $response->withHeader("Access-Control-Max-Age", 600);
     
-    return addHeaders ($response);
+    return addHeaders ($response,$request->getHeader('Origin')[0]);
 });
 
 
@@ -61,7 +61,7 @@ $app->get('/api/auth/{login}', function (Request $request, Response $response, $
     $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login));
     if ($utilisateur) {
         $data = array('nom' => $utilisateur->getNom(), 'prenom' => $utilisateur->getPrenom());
-        $response = addHeaders ($response);
+        $response = addHeaders ($response,$request->getHeader('Origin')[0]);
         $response = createJwT ($response);
         $response->getBody()->write(json_encode($data));
     } else {
@@ -90,7 +90,7 @@ $app->post('/api/login', function (Request $request, Response $response, $args) 
         $utilisateurRepository = $entityManager->getRepository('Utilisateur');
         $utilisateur = $utilisateurRepository->findOneBy(array('login' => $login, 'password' => $pass));
         if ($utilisateur and $login == $utilisateur->getLogin() and $pass == $utilisateur->getPassword()) {
-            $response = addHeaders ($response);
+            $response = addHeaders ($response,$request->getHeader('Origin')[0]);
             $response = createJwT ($response);
             $data = array('nom' => $utilisateur->getNom(), 'prenom' => $utilisateur->getPrenom());
             $response->getBody()->write(json_encode($data));
