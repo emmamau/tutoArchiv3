@@ -17,13 +17,12 @@ function  addHeaders (Response $response, string $orign = "herokuapp") : Respons
     $response = $response
     ->withHeader("Content-Type", "application/json")
     ->withHeader('Access-Control-Allow-Origin', (str_contains($origin, 'herokuapp')?'http://cnam67.herokuapp.com':'http://localhost'))
-    ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+    ->withHeader('Access-Control-Allow-Headers', 'Content-Type,  Authorization')
     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
     ->withHeader('Access-Control-Expose-Headers', 'Authorization');
 
     return $response;
 }
-
 
 function createJwt (Response $response) : Response {
     $userid = "emma";
