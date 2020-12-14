@@ -4,6 +4,10 @@ RewriteCond %{HTTP_USER_AGENT} Android [NC]
 RewriteCond %{THE_REQUEST} !(pwa|api) [NC]
 RewriteRule ^ pwa%{REQUEST_URI} [L]
 
+RewriteCond %{HTTP_USER_AGENT} Android [NC]
+RewriteCond %{THE_REQUEST} /
+RewriteRule ^ pwa%{REQUEST_URI} [L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
